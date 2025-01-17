@@ -787,7 +787,11 @@ class AudioRetrievalModel(pl.LightningModule, ABC):
 
         if self.trainer.is_global_zero and self.store_predictions:
             print(self.logger)
-            experiment_name = self.experiment_name if not self.logger else self.logger.experiment.name
+            if not self.logger or not hasattr(self.logger.experiment, 'name'):
+                print(self.experiment_name)
+                experiment_name = self.experiment_name
+            else:
+                experiment_name = self.logger.experiment.name
             path = os.path.join(get_model_dir(), experiment_name)
             print("\nSaving predictions to ", path)
             os.makedirs(path, exist_ok=True)
