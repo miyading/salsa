@@ -5,7 +5,7 @@ from sacred import Ingredient
 from utils.directories import directories, get_dataset_dir
 from data.datasets.dataset_base_classes import audio_dataset, DatasetBaseClass
 
-SPLITS = ['development', 'validation', 'evaluation']
+SPLITS = ['development', 'validation', 'evaluation', 'predict']
 
 clotho_v2 = Ingredient('clotho_v2', ingredients=[directories, audio_dataset])
 
@@ -22,7 +22,7 @@ def config():
 @clotho_v2.capture
 def get_clotho_v2(split, folder_name, compress):
 
-    splits = {'train': 'development', 'val': 'validation', 'test': 'evaluation'}
+    splits = {'train': 'development', 'val': 'validation', 'test': 'evaluation', 'predict': 'predict'}
     assert split in list(splits.keys())
     ds = Clotho_v2Dataset(splits[split])
     return ds
@@ -62,7 +62,7 @@ class Clotho_v2Dataset(DatasetBaseClass):
 
         self.metadata = pd.concat([metadata, captions], axis=1)
         self.metadata.reset_index(inplace=True)
-        self.num_captions = 1 if split in ['analysis'] else 5
+        self.num_captions = 1 if split in ['predict', 'analysis'] else 5
 
         self.paths, self.attributes = [], []
 
