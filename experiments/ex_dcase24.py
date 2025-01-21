@@ -1080,6 +1080,23 @@ def cmd_eval_on_clothov2(load_model, _config):
     print(result)
     return result[0]
 
+@audio_retrieval.command
+def cmd_predict_on_clothov2(load_model, _config):
+    print('Initialize model...')
+    print(load_model)
+    model = AudioRetrievalModel.load_from_checkpoint(load_model, strict=False)
+    model.store_predictions = True
+    model = model.cuda()
+    model.eval()
+    t = get_trainer(None)
+
+    predict = get_data_set('clothov2', 'predict')
+    result = t.test(model, get_eval_data_loader(predict, shuffle=True, distributed=False))
+
+    print(result)
+    return result[0]
+
+
 def multiprocessing_run(rank, word_size, pernode=None):
     import socket
     print("rank ", rank, os.getpid(), "hash=", hash("kk test"), " on node ", socket.gethostname())
