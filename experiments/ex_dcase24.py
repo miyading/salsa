@@ -226,7 +226,7 @@ def run_one(log_db_name, train_on, resume_training, _config=None):
 @audio_retrieval.capture
 def get_data_set(data_set_id, mode, _config):
     if data_set_id == 'clothov2' or (data_set_id in ['wavcaps', 'all'] and mode != 'train'):
-        assert mode in ['train', 'val', 'test', 'analysis']
+        assert mode in ['train', 'val', 'test', 'analysis', 'predict']
         ds = get_clotho_v2(mode)
         ds.set_fixed_length(30)
     elif data_set_id == 'audiocaps':
