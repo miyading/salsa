@@ -11,6 +11,7 @@ import itertools
 from data.datasets.dataset_base_classes import ConcatDataset
 from data.datasets.clotho_v2 import clotho_v2, get_clotho_v2
 from data.datasets.audio_caps import audiocaps, get_audiocaps
+from data.datasets.music_caps import musiccaps, get_musiccaps
 from data.datasets.wavcaps import wavcaps, get_wavecaps
 from data.datasets.audioset import audioset, get_audioset
 from data.data_loader import data_loader, get_train_data_loader, get_eval_data_loader
@@ -38,6 +39,7 @@ audio_retrieval = Experiment('audio_retrieval', ingredients=[
     directories,
     clotho_v2,
     audiocaps,
+    musiccaps,
     wavcaps,
     data_loader,
     audioset
@@ -237,11 +239,15 @@ def get_data_set(data_set_id, mode, _config):
         ds = get_wavecaps()
         ds.compress = True
         ds.set_fixed_length(30)
+    elif data_set_id == 'musiccaps':
+        ds = get_musiccaps(mode)
+        ds.set_fixed_length(10)
     elif data_set_id == 'all':
         ds = ConcatDataset(
             [
                 get_clotho_v2('train'),
                 get_audiocaps('train'),
+                get_musiccaps('train'),
                 get_wavecaps()
             ]
         )
